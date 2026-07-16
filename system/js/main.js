@@ -1179,11 +1179,15 @@ window.addEventListener("load", () => {
       const pages = getPages();
 
       if (!pages.length) {
-        // No real assets were found (fetch succeeded, sheet is just empty) —
-        // show a single empty page instead of leaving the UI mid-load.
-        if (pageIndicator) pageIndicator.textContent = "Page 1/1";
-        sessionStorage.setItem("currentPage", 1);
-        updateVisibility();
+        // Only treat this as "genuinely empty" once a fetch has actually
+        // resolved (window.assetsData is set, even to []). Before that,
+        // 0 pages just means data hasn't loaded yet — leave the searching
+        // gif hidden, same as before, since the loading screen covers it.
+        if (Array.isArray(window.assetsData)) {
+          if (pageIndicator) pageIndicator.textContent = "Page 1/1";
+          sessionStorage.setItem("currentPage", 1);
+          updateVisibility();
+        }
         return;
       }
 
