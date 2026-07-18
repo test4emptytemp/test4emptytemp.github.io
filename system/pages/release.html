@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SundaeZipper | WannaSmile Download</title>
+<link id="favicon" rel="icon" href="https://raw.githubusercontent.com/sundaezipper/sundaezipper.github.io/main/favicon.png" />
+
+<!-- Shoelace -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/shoelace-autoloader.js"></script>
+
+<link href="profilish.css" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+::selection, ::-moz-selection { background: transparent; }
+
+/* ===== BODY ===== */
+body {
+  background: url("https://raw.githubusercontent.com/wnasmile/wnasmile.github.io/main/assets/images/releaseBg.png") center / cover no-repeat fixed;
+  font-family: monospace;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+header {
+  width: 100%;
+  height: 150px;
+  background: url("https://raw.githubusercontent.com/wnasmile/wnasmile.github.io/main/assets/images/releaseHeader.png") center / 100% 100% no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+header img { width: 50%; height: 50%; object-fit: contain; }
+
+#headerProfile {
+  position: absolute; top: 10px; right: 10px;
+  width: 40px; height: 40px; border-radius: 50%;
+  overflow: hidden; cursor: pointer; transition: transform 0.2s; z-index: 5;
+}
+#headerProfile:hover { transform: scale(1.1); }
+#headerProfile img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  position: relative;
+}
+
+/* ===== BANNER ===== */
+.banner { width: 100%; height: 250px; }
+.banner img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== CONTENT ===== */
+.asset-card { padding: 1.5rem; }
+.asset-card h2 { color: #ff6f61; margin-bottom: 0.5rem; }
+.asset-card .subtitle { color: #999; font-size: 0.85rem; margin-bottom: 1rem; }
+.asset-card ul { padding-left: 1.2rem; margin-bottom: 1.5rem; }
+.asset-card ul li { margin-bottom: 0.35rem; }
+
+/* ===== VERSION HISTORY ===== */
+#historyWrap { margin: 0.5rem 0 1.5rem; }
+#historyWrap summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #ff6f61;
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+#historyList { list-style: none; padding-left: 0; }
+#historyList li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+#historyList li:last-child { border-bottom: none; }
+#historyList a {
+  color: #ff6f61;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 0.4rem;
+}
+#historyList a:hover { text-decoration: underline; }
+
+/* ===== BUTTONS ===== */
+.download-btn, .support-btn {
+  padding: 0.6rem 1.2rem;
+  background: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+.download-btn:hover, .support-btn:hover { background: #e65a4f; }
+.download-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* ===== OVERLAY ===== */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  color: white;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+#overlay.active { display: flex; }
+#overlay sl-spinner { font-size: 3rem; --track-color: rgba(255,255,255,0.2); --indicator-color: #ff6f61; }
+
+/* ===== PROGRESS ===== */
+#progressWrap {
+  width: 280px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+}
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: #ff6f61;
+  transition: width 0.15s ease;
+  border-radius: 8px;
+}
+#progressLabel { font-size: 0.85rem; opacity: 0.8; }
+
+/* ===== ALERTS ===== */
+#alertStack {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 380px;
+}
+
+/* ===== FOOTER ===== */
+footer { text-align: center; padding: 2rem; color: #777; }
+
+.contributors {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  justify-content: center;
+  gap: 5px;
+  padding: 20px 0;
+}
+.contributors img { width: 60px; height: auto; border-radius: 50%; display: block; }
+</style>
+</head>
+<body>
+
+<!-- Overlay (loading screen) -->
+<div id="overlay">
+  <sl-spinner></sl-spinner>
+  <span id="overlayMsg">Preparing ZIP…</span>
+  <div id="progressWrap"><div id="progressBar"></div></div>
+  <span id="progressLabel"></span>
+</div>
+
+<!-- Shoelace alert stack -->
+<div id="alertStack"></div>
+
+<header>
+  <img src="https://raw.githubusercontent.com/wnasmile/wnasmile.github.io/main/assets/images/title.png" alt="WannaSmile Banner">
+</header>
+
+<div class="container">
+  <div class="banner">
+    <img src="https://raw.githubusercontent.com/wnasmile/wnasmile.github.io/main/assets/images/wannasmile-banner.png" alt="WannaSmile Banner">
+  </div>
+
+  <div class="asset-card">
+    <!-- Version filled dynamically; fallback shown while loading -->
+    <h2 id="releaseTitle">WannaSmile</h2>
+    <p class="subtitle" id="releaseFilename"></p>
+
+    <p>What's new:</p>
+    <ul id="changelog">
+      <li><em>Loading release info…</em></li>
+    </ul>
+
+    <details id="historyWrap" style="display:none;">
+      <summary>Previous versions</summary>
+      <ul id="historyList"></ul>
+    </details>
+
+    <button id="download" class="download-btn" disabled>Download</button>
+    <button id="support" class="support-btn">Support Creator</button>
+    <button id="source" class="support-btn" style="background:#555;">View Source</button>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 SundaeZipper | by mcmattyobriore on github
+</footer>
+
+<script type="module">
+/* ================= CONFIG =================
+   Single source of truth for release info: a Google Sheet published as a
+   Web App (doGet). This is intentionally decoupled from any specific repo —
+   swap SHEET_API_URL any time the sheet is redeployed and nothing else on
+   this page needs to change.
+
+   Expected doGet() response shape — one array per column, values ordered
+   oldest → newest (the LAST entry in every array is always "latest").
+   Matches the companion release-feed.gs Apps Script, whose row 1 headers
+   are: version | url | info | zip download name
+     {
+       "version":             ["v0.8.2", "v0.8.3", "v0.8.4"],
+       "url":                 ["https://.../v082.zip", "https://.../v083.zip", "https://.../v084.zip"],
+       "info":                ["Initial build", "Bugfixes", "Added dark mode\nFixed crash on load"],
+       "zip download name":   ["wannasmile-v082.zip", "wannasmile-v083.zip", "wannasmile-v084.zip"]
+     }
+   Column headers are matched case/punctuation-insensitively (see
+   findColumn), so "Download URL", "download_url", "Info", "ZIP Download
+   Name" etc. all resolve correctly. Only a url-like column is required —
+   version/info/filename just improve the display. "info" supports
+   multiple lines (\n) which render as separate bullet points. ================= */
+const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw3P0APtsndfuzYvpNFyVzMUnGoPr_29tvSGbTz5crC6pzAvj_3hsckHiKdca-rNWVfuw/exec";
+const SUPPORT_URL   = "https://www.youtube.com/@mcmattyobriore";
+const SOURCE_URL    = "https://github.com/test4emptytemp/test4emptytemp.github.io";
+
+/* ================= ELEMENTS ================= */
+const downloadBtn    = document.getElementById("download");
+const supportBtn     = document.getElementById("support");
+const sourceBtn      = document.getElementById("source");
+const overlay        = document.getElementById("overlay");
+const overlayMsg     = document.getElementById("overlayMsg");
+const progressBar    = document.getElementById("progressBar");
+const progressLabel  = document.getElementById("progressLabel");
+const releaseTitle   = document.getElementById("releaseTitle");
+const releaseFilename= document.getElementById("releaseFilename");
+const changelog       = document.getElementById("changelog");
+const historyWrap      = document.getElementById("historyWrap");
+const historyList      = document.getElementById("historyList");
+const alertStack      = document.getElementById("alertStack");
+
+let releaseRows = []; // oldest -> newest, populated after fetch
+
+/* ================= SHOELACE ALERTS ================= */
+/**
+ * @param {string} message
+ * @param {"primary"|"success"|"warning"|"danger"|"neutral"} variant
+ * @param {string} icon  - shoelace icon name
+ * @param {number} duration - ms before auto-close (0 = manual)
+ */
+function showAlert(message, variant = "neutral", icon = "info-circle", duration = 4000) {
+  const alert = Object.assign(document.createElement("sl-alert"), {
+    variant,
+    closable: true,
+    duration,
+  });
+  alert.innerHTML = `<sl-icon slot="icon" name="${icon}"></sl-icon>${message}`;
+  alertStack.appendChild(alert);
+  // Shoelace needs the element in DOM before calling toast()
+  customElements.whenDefined("sl-alert").then(() => alert.toast());
+}
+
+/* ================= HELPERS ================= */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function normalizeKey(k) {
+  return String(k).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// Finds a column in the sheet response by trying exact normalized matches
+// first, then falling back to a "contains" match, so headers like
+// "Download URL", "download_link", or "Asset Link" all resolve correctly.
+function findColumn(data, patterns) {
+  const keys = Object.keys(data);
+  for (const p of patterns) {
+    const hit = keys.find(k => normalizeKey(k) === p);
+    if (hit) return data[hit];
+  }
+  for (const p of patterns) {
+    const hit = keys.find(k => normalizeKey(k).includes(p));
+    if (hit) return data[hit];
+  }
+  return [];
+}
+
+/* ================= FETCH + PARSE ================= */
+async function fetchReleaseRows() {
+  const res = await fetch(SHEET_API_URL, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Sheet API returned ${res.status}`);
+  const data = await res.json();
+
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error("Unexpected response shape from the sheet API (expected a JSON object of columns).");
+  }
+
+  const versions  = findColumn(data, ["version", "ver"]);
+  const links     = findColumn(data, ["downloadurl", "download", "url", "link"]);
+  const notes     = findColumn(data, ["notes", "info", "changelog", "message", "description"]);
+  const filenames = findColumn(data, ["filename", "file", "name"]);
+
+  if (!links.length) {
+    throw new Error('No download-link column found. Add a header like "downloadUrl" to the sheet.');
+  }
+
+  return links
+    .map((link, i) => ({
+      version:  (versions[i]  ?? "").toString().trim() || `Build ${i + 1}`,
+      link:     (link ?? "").toString().trim(),
+      notes:    (notes[i]     ?? "").toString().trim(),
+      filename: (filenames[i] ?? "").toString().trim(),
+    }))
+    .filter(r => r.link); // rows without an actual link are useless — drop them
+}
+
+/* ================= RENDER ================= */
+function renderRelease(rows) {
+  releaseRows = rows;
+
+  if (!rows.length) {
+    releaseTitle.textContent = "WannaSmile";
+    changelog.innerHTML = "<li>No release info found.</li>";
+    downloadBtn.disabled = true;
+    historyWrap.style.display = "none";
+    return;
+  }
+
+  const latest = rows[rows.length - 1];
+  releaseTitle.textContent = `WannaSmile ${latest.version}`;
+  releaseFilename.textContent = latest.filename || "";
+
+  changelog.innerHTML = latest.notes
+    ? latest.notes.split(/\r?\n/).filter(Boolean).map(l => `<li>${escapeHtml(l)}</li>`).join("")
+    : "<li><em>No changelog provided for this release.</em></li>";
+
+  const history = rows.slice(0, -1).reverse(); // newest-first, excluding latest
+  if (history.length) {
+    historyList.innerHTML = history.map(r => `
+      <li>
+        <strong>${escapeHtml(r.version)}</strong>${r.notes ? " — " + escapeHtml(r.notes.split(/\r?\n/)[0]) : ""}
+        <a href="${escapeHtml(r.link)}" target="_blank" rel="noopener noreferrer">download</a>
+      </li>
+    `).join("");
+    historyWrap.style.display = "";
+  } else {
+    historyWrap.style.display = "none";
+  }
+
+  downloadBtn.disabled = false;
+}
+
+/* ================= DOWNLOAD ================= */
+downloadBtn.addEventListener("click", async () => {
+  const latest = releaseRows[releaseRows.length - 1];
+  if (!latest) { showAlert("No release available yet.", "warning", "exclamation-triangle"); return; }
+
+  downloadBtn.disabled = true;
+  overlay.classList.add("active");
+  overlayMsg.textContent = "Starting download…";
+  progressBar.style.width = "0%";
+  progressLabel.textContent = "";
+
+  try {
+    // Stream with a progress bar when the host allows it (CORS + Content-Length).
+    const res = await fetch(latest.link);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const total  = +res.headers.get("Content-Length") || 0;
+    const reader = res.body?.getReader();
+    let blob;
+
+    if (reader && total) {
+      const chunks = [];
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        const pct = Math.round((received / total) * 100);
+        progressBar.style.width = `${pct}%`;
+        progressLabel.textContent = `${(received / 1e6).toFixed(1)}MB / ${(total / 1e6).toFixed(1)}MB`;
+      }
+      blob = new Blob(chunks);
+    } else {
+      overlayMsg.textContent = "Downloading… (size unknown)";
+      blob = await res.blob();
+      progressBar.style.width = "100%";
+    }
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = latest.filename || latest.link.split("/").pop().split("?")[0] || "wannasmile.zip";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+
+    showAlert("Download complete! 🎉", "success", "check-circle", 3000);
+  } catch (err) {
+    // Fetch/blob can fail purely due to the host not sending CORS headers —
+    // that doesn't mean the file is unreachable, just that we can't stream
+    // it into a blob from here. Fall back to a direct browser navigation,
+    // which works regardless of CORS.
+    console.warn("Progress download failed, falling back to direct link:", err);
+    window.open(latest.link, "_blank", "noopener");
+    showAlert("Opened the file directly — your browser is handling the download.", "neutral", "info-circle", 5000);
+  } finally {
+    overlay.classList.remove("active");
+    downloadBtn.disabled = false;
+  }
+});
+
+/* ================= SUPPORT / SOURCE ================= */
+supportBtn.addEventListener("click", () => window.open(SUPPORT_URL, "_blank"));
+sourceBtn.addEventListener("click", () => window.open(SOURCE_URL, "_blank"));
+
+/* ================= INIT ================= */
+(async () => {
+  try {
+    const rows = await fetchReleaseRows();
+    renderRelease(rows);
+  } catch (err) {
+    console.error("Release fetch error:", err);
+    releaseTitle.textContent = "WannaSmile";
+    changelog.innerHTML = "<li>Failed to load release info.</li>";
+    showAlert(`Could not load release info: ${err.message}`, "danger", "x-circle", 0);
+  }
+})();
+</script>
+</body>
+</html>

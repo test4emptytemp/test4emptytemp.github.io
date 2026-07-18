@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link id="favicon" rel="icon" href="../../assets/favicons/favicon.png"/>
+<title>WannaSmile | Settings</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.9.0/cdn/themes/dark.css" />
+<link rel="stylesheet" href="../css/main.css" />
+<link rel="stylesheet" href="../css/shortcuts.css" />
+
+<link rel="preload" as="image" href="https://raw.githubusercontent.com/01110010-00110101/themeify/main/redux/Redux-headerbg.png" />
+<link rel="preload" as="image" href="https://raw.githubusercontent.com/01110010-00110101/themeify/main/redux/Redux-quotebg.png" />
+<link rel="preload" as="image" href="https://raw.githubusercontent.com/01110010-00110101/themeify/main/redux/Redux-mainbg.png" />
+<link rel="preload" as="image" href="https://raw.githubusercontent.com/wnasmile/wnasmile.github.io/main/assets/themes/redux/footerbg.png" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+</head>
+
+<body class="ws-loading">
+
+<div id="incognitoIndicator">blob:null mode</div>
+<div id="topBar">
+  <header>
+    <nav class="nav-links">
+      <a href="../.." target="_blank">Home</a>
+      <a href="favorites.html" target="_blank">Favorites</a>
+      <a href="discovery.html" target="_blank">Discovery</a>
+      <a href="settings.html" target="_blank">Settings</a>
+      <a href="https://padlet.com/rhap5ody/wannasmile-suggestion-report-page-t8t6pg32hl71ri9m" target="_blank">Suggestions</a>
+      <a href="about.html" target="_blank">About</a>
+      <div class="pages-anchor">
+        <button class="mute-btn">
+          <img src="../../assets/gifs/audio-btn/BOOM.gif" id="muteToggleImg" />
+        </button>
+
+        <button class="Qtype">
+          <img src="../../assets/images/Qleft.png" id="QtypeToggle" />
+        </button>
+
+        <button id="nes-btn">
+          <img src="../../assets/images/escape.png" alt="Toggle">
+        </button>
+
+        <button id="cloak-btn">
+          <img src="../../assets/images/vis.png" alt="CloakToggle">
+        </button>
+      </div>
+    </nav>
+    <div class="header-controls">
+      <img id="pfp" src="https://raw.githubusercontent.com/mcmattyobriore/yogurtyooo.github.io/main/system/images/profile/smile.png" />
+      <button id="dashboardBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+</div>
+
+<aside id="dashboardMenu" class="dashboard-menu">
+  <p id="dashNickname" style="opacity:0.6;font-size:0.85em;">Guest</p>
+  <a href="#" id="openShortCuts">Shortcuts</a>
+  <a href="credits.html">credits &amp; contributors</a>
+  <a href="#" id="clearData">Clear My Data</a>
+  <a href="release.html">DOWNLOAD V0.8.4!</a>
+</aside>
+
+<main>
+  <div class="settings-page">
+    <h1>Settings</h1>
+
+    <section class="settings-section">
+      <h2>🖼️ Asset Grid Layout</h2>
+      <p class="settings-hint">
+        Control how many assets are shown per row on the Home / Favorites / Discovery
+        grids. Cards and images grow to fill the row — their positions inside each card
+        stay the same, only the size changes. Default is automatic (responsive to your
+        window size / zoom level).
+      </p>
+      <div class="settings-field">
+        <label for="assetsPerRowInput">Assets per row: <span id="assetsPerRowValue">Auto (default)</span></label>
+        <input type="range" id="assetsPerRowInput" min="1" max="8" step="1" value="5">
+      </div>
+      <button type="button" id="assetsPerRowReset" class="overlay-btn">↺ Reset to Default</button>
+    </section>
+
+    <section class="settings-section">
+      <h2>🕶️ Tab Cloak</h2>
+      <p class="settings-hint">Disguise this tab's title &amp; icon.</p>
+      <div class="settings-field">
+        <label for="presetCloaks">Preset</label>
+        <select id="presetCloaks">
+          <option value="">— choose a preset —</option>
+          <option value="google">Google</option>
+          <option value="drive">Google Drive</option>
+          <option value="classroom">Google Classroom</option>
+          <option value="newtab">New Tab</option>
+          <option value="docs">Google Docs</option>
+          <option value="schoology">Schoology</option>
+          <option value="outlook">Outlook</option>
+          <option value="canvas">Canvas</option>
+        </select>
+      </div>
+      <div class="settings-field">
+        <label for="webname">Tab title</label>
+        <input type="text" id="webname" placeholder="e.g. Google">
+      </div>
+      <div class="settings-field">
+        <label for="webicon">Tab icon URL</label>
+        <input type="text" id="webicon" placeholder="https://...">
+      </div>
+      <button type="button" class="overlay-btn" onclick="setCloakCookie(event)">Set &amp; Enable Cloak</button>
+      <button type="button" class="overlay-btn remove-btn" onclick="clearCloak()">Clear Cloak</button>
+    </section>
+
+    <section class="settings-section">
+      <h2>🚨 Panic Button</h2>
+      <p class="settings-hint">Press <kbd>Esc</kbd> to instantly redirect to this URL.</p>
+      <div class="settings-field">
+        <label for="presetPanic">Preset</label>
+        <select id="presetPanic">
+          <option value="">— choose a preset —</option>
+          <option value="google">Google</option>
+          <option value="drive">Google Drive</option>
+          <option value="classroom">Google Classroom</option>
+          <option value="docs">Google Docs</option>
+          <option value="canvas">Canvas</option>
+          <option value="schoology">Schoology</option>
+          <option value="outlook">Outlook</option>
+          <option value="bing">Bing</option>
+          <option value="wikipedia">Wikipedia</option>
+        </select>
+      </div>
+      <div class="settings-field">
+        <label for="panicURL">Panic URL</label>
+        <input type="text" id="panicURL" placeholder="https://...">
+      </div>
+      <button type="button" class="overlay-btn" onclick="setPanicMode(event)">Save Panic URL</button>
+      <button type="button" class="overlay-btn remove-btn" onclick="clearPanicMode()">Clear Panic URL</button>
+    </section>
+
+    <section class="settings-section">
+      <h2>🔒 Access Password</h2>
+      <div class="settings-field">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" placeholder="Enter a password">
+      </div>
+      <button type="button" class="overlay-btn" onclick="setPassword(event)">Set Password</button>
+      <button type="button" class="overlay-btn remove-btn" onclick="delPassword()">Clear Password</button>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://github.com/slackerish/slackerish.github.io" target="_blank" rel="noopener noreferrer">source</a>
+    <a href="dmca.html" target="_blank" rel="noopener noreferrer">DMCA</a>
+    <a href="https://discord.gg/4AKdJxJUMH" target="_blank">Discord</a>
+    <a href="#" id="importData">Import Data</a>
+    <a href="#" id="exportData">Export Data</a>
+    <a href="#" id="transData">Transfer Data</a>
+    <a href="#" id="footerVersion" target="_blank">Version loading...</a>
+  </div>
+</footer>
+
+<style>
+.settings-page {
+  max-width: 640px;
+  margin: 24px auto 60px;
+  padding: 0 20px;
+  color: var(--url-color, #fff);
+  font-family: monospace;
+}
+.settings-page h1 {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+}
+.settings-section {
+  background: rgba(0,0,0,0.35);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+.settings-section h2 {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+.settings-hint {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.settings-field {
+  margin-bottom: 12px;
+}
+.settings-field label {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+.settings-field input[type="text"],
+.settings-field input[type="password"],
+.settings-field select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  background: #333;
+  color: #fff;
+}
+.settings-field input[type="range"] {
+  width: 100%;
+}
+.overlay-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 4px 4px 0 0;
+  transition: transform .15s, background .15s;
+  background: #444;
+}
+.overlay-btn:hover { transform: scale(1.04); background: #555; }
+.remove-btn { background: #555; }
+</style>
+
+<script src="../js/utils.js"></script>
+<script src="../js/version.js"></script>
+<script src="../js/themify.js"></script>
+<script src="../js/sanitizer.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/settings.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/quotes.js"></script>
+<script src="../js/boom.js"></script>
+<script src="../js/panic.js"></script>
+<script src="../js/shortcuts.js"></script>
+<script src="../js/commands.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/gridSettings.js"></script>
+
+</body>
+</html>
